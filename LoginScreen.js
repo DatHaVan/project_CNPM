@@ -3,7 +3,7 @@ import React, {useState, useRef} from 'react';
 import { StyleSheet,Modal,Text,Image,TextInput, View ,TouchableOpacity, ImageBackground} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
-
+import moment from 'moment';
 const image = {uri: 'https://images.pexels.com/photos/62693/pexels-photo-62693.jpeg?auto=compress&cs=tinysrgb&w=600'};
 
 
@@ -20,8 +20,9 @@ export default function Login({navigation}) {
   const [gioitinhValue, setgioitinhValue] = useState('');
   const [ngaysinhValue, setngaysinhValue] = useState('');
   const [noithuongtruValue, setnoithuongtruValue] = useState('');
-  
   const [matkhauDangKyValue, setmatkhauDangKyValue] = useState('');
+
+  const [matkhauDangKyQuanTriValue, setmatkhauDangKyQuanTriValue] = useState('');
   const [socccdDangNhapValue, setsocccdDangNhapValue] = useState('');
   const [matkhauDangNhapValue, setmatkhauDangNhapValue] = useState('');
 
@@ -143,13 +144,15 @@ const onPressDienMatKhauDangKy = () => {
  const closeModalDangNhap = async () => {
   // Đóng modal khi cần
 
- //readData(); async
+ //readData();
  const cccdValue = await AsyncStorage.getItem('cccdValue');
  const matkhauDangKyValue = await AsyncStorage.getItem('matkhauDangKyValue');
  if(cccdValue === socccdDangNhapValue && matkhauDangKyValue === matkhauDangNhapValue){
   navigation.navigate('Home');
- }else {
+ }else if(socccdDangNhapValue === '000000000000' && matkhauDangNhapValue === 'Root') {
+  navigation.navigate('Home_Quan_Tri_Vien'); 
 
+ }else{
   Alert.alert('Số CCCD hoặc mật khẩu chưa chính xác ! Hãy thử lại ');
  }
 
@@ -159,25 +162,60 @@ const onPressDienMatKhauDangKy = () => {
 
 
 const closeModalDangKy = async () => {
+  
   try {
-    await AsyncStorage.setItem('cccdValue', cccdValue);
-    await AsyncStorage.setItem('sdtValue', sdtValue);
+  
+  
+    if (cccdValue.length === 12 && /^\d+$/.test(cccdValue)) {
+      await AsyncStorage.setItem('cccdValue', cccdValue);
+         } else {
+            Alert.alert('Sai định dạng số CCCD.');
+            return; // Dừng hàm nếu CCCD không hợp lệ
+     }
+     if (sdtValue.length === 10 && /^\d+$/.test(sdtValue)) {
+      await AsyncStorage.setItem('sdtValue', sdtValue);
+    } else {
+      Alert.alert('Sai định dạng số điện thoại.');
+      return; // Dừng hàm nếu số điện thoại không hợp lệ
+    }
+    
     await AsyncStorage.setItem('hotenValue', hotenValue,);
     await AsyncStorage.setItem('gioitinhValue', gioitinhValue);
-    await AsyncStorage.setItem('ngaysinhValue', ngaysinhValue,);
-    await AsyncStorage.setItem('noithuongtruValue', noithuongtruValue);
+    
+    if (moment(ngaysinhValue, 'YYYY-MM-DD', true).isValid()) {
+      await AsyncStorage.setItem('ngaysinhValue', ngaysinhValue);
+    } else {
+      Alert.alert('Sai định dạng ngày sinh.');
+      return; // Dừng hàm nếu ngày sinh không hợp lệ
+    }
 
-    await AsyncStorage.setItem('matkhauDangKyValue', matkhauDangKyValue);
+   // await AsyncStorage.setItem('ngaysinhValue', ngaysinhValue,);
+    await AsyncStorage.setItem('noithuongtruValue', noithuongtruValue);
+  
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
+    if (passwordRegex.test(matkhauDangKyValue)) {
+      await AsyncStorage.setItem('matkhauDangKyValue', matkhauDangKyValue);
+    } else {
+      Alert.alert('Mật khẩu cần có độ là 8, có chữ in hoa, chữ số, ký tự đặc biệt.');
+      return; // Dừng hàm nếu mật khẩu không hợp lệ
+    }
+  
+    
+
+   
+    //await AsyncStorage.setItem('matkhauDangKyValue', matkhauDangKyValue);
     // Các bước lưu dữ liệu khác nếu cần thiết
 
-    Alert.alert('Đăng ký thành công.');
+    //Alert.alert('Đăng ký thành công.');
 
-    setModalVisible(false); // Đóng modal sau khi lưu dữ liệu thành công
+   // setModalVisible(false); // Đóng modal sau khi lưu dữ liệu thành công
+   Alert.alert('Đăng ký thành công.');
+   setModalVisible(false); // Đóng modal sau khi lưu dữ liệu thành công
  } catch (error) {
-    console.log(error);
-  }
+   console.log(error);
+ }
 };
-/*const readData = async () => {
+const readData = async () => {
   try {
     const cccdValue = await AsyncStorage.getItem('cccdValue');
     const sdtValue = await AsyncStorage.getItem('sdtValue');
@@ -189,9 +227,14 @@ const closeModalDangKy = async () => {
     const matkhauDangKyValue = await AsyncStorage.getItem('matkhauDangKyValue');
 
 
-    if (cccdValue !== null  && matkhauDangKyValue !== null && sdtValue !== null  && hotenValue !== null && gioitinhValue !== null && ngaysinhValue !== null && noithuongtruValue !== null && sonhaValue !== null ) {
+    if (cccdValue !== null  && matkhauDangKyValue !== null && sdtValue !== null  && hotenValue !== null && gioitinhValue !== null && ngaysinhValue !== null && noithuongtruValue !== null  ) {
       // Xử lý dữ liệu ở đây nếu cần
       console.log('cccdValue:',cccdValue);
+      console.log('sdtValue :', sdtValue );
+      console.log('hotenValue:', hotenValue);
+      console.log('gioitinhValue:', gioitinhValue);
+      console.log('ngaysinhValue:', ngaysinhValue);
+      console.log('noithuongtruValue:', noithuongtruValue);
       console.log('matkhauDangKyValue:', matkhauDangKyValue);
 
     } else {
@@ -200,7 +243,7 @@ const closeModalDangKy = async () => {
   } catch (error) {
     console.error(error);
   }
-};*/
+};
 
 const onPressDienSoCCCDDangNhap= () => {
   // Xử lý khi người dùng chạm vào nút
@@ -300,7 +343,7 @@ return (
                            style={styles.Textngaysinh}
                            onChangeText={handlengaysinhInputChange}
                            value={ngaysinhValue}
-                           placeholder="Nhập ngày / tháng / năm sinh "
+                           placeholder="Nhập  Năm / tháng / ngày "
                           />
                </TouchableOpacity>  
             </View>
@@ -329,6 +372,7 @@ return (
                            onChangeText={handlematkhauDangKyInputChange}
                            value={matkhauDangKyValue}
                            placeholder="Nhập mật khẩu "
+                           secureTextEntry={true}
                           />
                </TouchableOpacity>  
             </View> 
@@ -538,14 +582,14 @@ modalText1: {
 marginBottom: 15,
 textAlign: 'center',
 marginLeft : -240,
-marginTop : -368,
+marginTop : -360,
 },
 
 modalText2 :{
 marginBottom: 15,
 textAlign: 'center',
 marginLeft : -290,
-marginTop : 20,
+marginTop :10,
 },
 modalText3 :{
 marginBottom: 15,
@@ -744,11 +788,11 @@ marginVertical : 'auto',
 marginTop : -20,
 },
 textDienHovaTen :{
-marginLeft : -255,
+//marginLeft : -255,
 backgroundColor : '#f0f2f5',
 marginTop : 20, 
-width : 100,
-height : 20,
+width : '100%',
+height : '7%',
 textAlign : 'center',
 marginLeft : -25,
 alignItems : 'center',
