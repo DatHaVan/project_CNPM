@@ -14,18 +14,15 @@ export default function Home  ({navigation})  {
  };
     
  const onPressThongTinNhanKhau = () => {};
-    // Xử lý khi người dùng chạm vào nút
-    // Thêm các xử lý khác nếu cần
+   
   const onPressKhaiBaoThuongTru = () => {
-    navigation.navigate('Khaibao');
+   
   };
     
   const onPressChinhSachHoTro = () => {};
-    // Xử lý khi người dùng chạm vào nút
-    // Thêm các xử lý khác nếu cần
+   
     const onPressCacDichVuKhac = () => {};
-    // Xử lý khi người dùng chạm vào nút
-    // Thêm các xử lý khác nếu cần
+   
   return (
     <View style={styles.container}>
         
@@ -61,7 +58,7 @@ export default function Home  ({navigation})  {
         <TouchableOpacity style={styles.button3} onPress={onPressThongTinNhanKhau}>
          <Text style = {styles.textThongTinNhanKhau}>Thông Tin Nhân Khẩu</Text>
          </TouchableOpacity>
-      </View>
+      </View> 
       
       <View style = {styles.boxKhaiBaoThuongTru}>
       <TouchableOpacity style={styles.button5} onPress={onPressKhaiBaoThuongTru}>
@@ -83,7 +80,7 @@ export default function Home  ({navigation})  {
       </View>
       <View style = {styles.boxCacDichVuKhac}>
       <TouchableOpacity style={styles.button8} onPress={onPressCacDichVuKhac}>
-         <Text style = {styles.textCacDichVuKhac}>Các Dịch Vụ Khác</Text>
+         <Text style = {styles.textCacDichVuKhac}>Thông tin nhân khẩu</Text>
          </TouchableOpacity>
       </View>
       
@@ -184,7 +181,7 @@ const styles = StyleSheet.create({
         fontSize : 17,
       },
    
-       textThongTinNhanKhau : {
+       /*textThongTinNhanKhau : {
         fontWeight : 'bold',
         marginTop : -10,
         marginLeft : 133,
@@ -197,11 +194,11 @@ const styles = StyleSheet.create({
         paddingVertical : 17,
         textAlign : 'center',
         backgroundColor : '#14b8a6',
-      },
+      },*/
       boxKhaiBaoThuongTru : {
         fontWeight : 'bold',
-       // marginTop : -10,
-        marginLeft : 255,
+     
+        marginLeft : 205,
         marginTop : -400,
         fontSize : 14,
         borderWidth : 1,
@@ -221,7 +218,7 @@ const styles = StyleSheet.create({
         fontSize : 14,
         borderWidth : 1,
         borderRadius : 15,
-        marginRight : 255,
+        marginRight : 205,
         textAlign : 'center',
         paddingHorizontal : 20,
         paddingVertical : 17,
@@ -231,9 +228,9 @@ const styles = StyleSheet.create({
      
       boxChinhSachHoTro: {
         fontWeight : 'bold',
-     //   marginTop : -10,
+     
         marginLeft : 255,
-        //marginTop : 0,
+      
         fontSize : 14,
         borderWidth : 1,
         borderRadius : 15,
@@ -246,13 +243,13 @@ const styles = StyleSheet.create({
       },
       boxCacDichVuKhac: {
         fontWeight : 'bold',
-        //   marginEnd : 5,
+     
            marginLeft : 5,
            marginTop : -70,
            fontSize : 14,
            borderWidth : 1,
            borderRadius : 15,
-           marginRight : 255,
+           marginRight : 205,
            textAlign : 'center',
            paddingHorizontal : 20,
            paddingVertical : 17,
